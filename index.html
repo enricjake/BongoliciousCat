@@ -6,10 +6,10 @@
   <meta name="description" content="Interactive Bongo Cat that plays drums when you click or tap">
   <title>Bongo Cat</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap">
-    <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button class="sound-toggle" aria-label="Toggle sound" onclick="toggleSound()">🔊 Sound On</button>
+  <button class="sound-toggle" aria-label="Toggle sound">🔊 Sound On</button>
   
   <h1 class="title" aria-label="Bongo Cat">🎵 Bongo Cat 🎵</h1>
   
@@ -42,10 +42,14 @@
     <div class="notes"></div>
   </div>
   
-    <p class="instructions">Click or tap to play! (Press A/D keys or Spacebar)</p>
+  <!-- Mobile control buttons -->
+  <div class="mobile-controls">
+    <button class="drum-button left-button" data-key="a">A</button>
+    <button class="drum-button right-button" data-key="d">D</button>
+  </div>
+  
+  <p class="instructions">Press A or D keys to play!</p>
 
-    <script src="script.js"></script>
-</body>
-</html>
+  <script src="script.js"></script>
 </body>
 </html>

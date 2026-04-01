@@ -54,14 +54,14 @@ const leftDrum = document.querySelector('.drum.left');
 const rightDrum = document.querySelector('.drum.right');
 const notesContainer = document.querySelector('.notes');
 const catHead = document.querySelector('.cat-head');
+const leftButton = document.querySelector('.left-button');
+const rightButton = document.querySelector('.right-button');
 
-let isLeft = true;
-
-function hitDrum(x, y) {
+function hitDrum(isLeftDrum, x, y) {
   initAudio();
   
-  const paw = isLeft ? leftPaw : rightPaw;
-  const drum = isLeft ? leftDrum : rightDrum;
+  const paw = isLeftDrum ? leftPaw : rightPaw;
+  const drum = isLeftDrum ? leftDrum : rightDrum;
   
   // Animate paw
   paw.classList.add('hit');
@@ -72,16 +72,14 @@ function hitDrum(x, y) {
   setTimeout(() => drum.classList.remove('hit'), 150);
   
   // Head bops slightly
-  catHead.style.transform = `rotate(${isLeft ? -5 : 5}deg)`;
+  catHead.style.transform = `rotate(${isLeftDrum ? -5 : 5}deg)`;
   setTimeout(() => catHead.style.transform = 'rotate(0deg)', 100);
   
   // Play sound
-  playDrum(isLeft ? 220 : 280);
+  playDrum(isLeftDrum ? 220 : 280);
   
   // Create note
   createNote(x, y);
-  
-  isLeft = !isLeft;
 }
 
 function createNote(x, y) {
@@ -95,54 +93,73 @@ function createNote(x, y) {
   setTimeout(() => note.remove(), 1000);
 }
 
-// Click handler
-document.body.addEventListener('click', (e) => {
-  if (e.target.classList.contains('sound-toggle')) return;
-  hitDrum(e.clientX - 200, 150);
-});
-
-// Touch handler
-document.body.addEventListener('touchstart', (e) => {
-  if (e.target.classList.contains('sound-toggle')) return;
-  e.preventDefault();
-  const touch = e.touches[0];
-  hitDrum(touch.clientX - 200, 150);
-});
-
-// Keyboard handler
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Space' || e.key === 'a' || e.key === 'd') {
-    initAudio();
-    const x = e.key === 'a' ? 140 : 260;
-    hitDrum(x - 200, 150);
-  }
-});
-
-// Idle animation
-let idleTimer = 0;
-function idleAnimation() {
-  idleTimer++;
-  if (idleTimer > 300) { // Every ~5 seconds
-    idleTimer = 0;
-    if (Math.random() > 0.5) {
-      hitDrum(140, 150);
-      setTimeout(() => hitDrum(260, 150), 200);
-    }
-  }
-  requestAnimationFrame(idleAnimation);
+// Setup button listeners
+function setupButtonListeners() {
+  // Left button (A)
+  leftButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hitDrum(true, 140, 150);
+  });
+  
+  leftButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    hitDrum(true, 140, 150);
+  });
+  
+  // Right button (D)
+  rightButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hitDrum(false, 260, 150);
+  });
+  
+  rightButton.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    hitDrum(false, 260, 150);
+  });
 }
-idleAnimation();
 
-// Initialize sound preference from localStorage
+// Keyboard handler - only A and D keys
+document.addEventListener('keydown', (e) => {
+  if (e.repeat) return; // Prevent key repeat
+  
+  const key = e.key.toLowerCase();
+  if (key === 'a') {
+    e.preventDefault();
+    hitDrum(true, 140, 150);
+    leftButton.classList.add('active');
+  } else if (key === 'd') {
+    e.preventDefault();
+    hitDrum(false, 260, 150);
+    rightButton.classList.add('active');
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  const key = e.key.toLowerCase();
+  if (key === 'a') {
+    leftButton.classList.remove('active');
+  } else if (key === 'd') {
+    rightButton.classList.remove('active');
+  }
+});
+
+// Initialize on DOM load
 window.addEventListener('DOMContentLoaded', () => {
+  // Load sound preference
   const savedSoundPref = localStorage.getItem('soundEnabled');
   if (savedSoundPref !== null) {
     soundEnabled = savedSoundPref === 'true';
     document.querySelector('.sound-toggle').textContent = soundEnabled ? '🔊 Sound On' : '🔇 Sound Off';
   }
   
-  // Add keyboard accessibility for sound toggle
+  // Setup button listeners
+  setupButtonListeners();
+  
+  // Add click listener for sound toggle
   const soundToggle = document.querySelector('.sound-toggle');
+  soundToggle.addEventListener('click', toggleSound);
   soundToggle.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
