@@ -64,19 +64,26 @@ function hitDrum(isLeftDrum, x, y) {
   const drum = isLeftDrum ? leftDrum : rightDrum;
   
   // Animate paw
+  paw.classList.remove('hit');
+  void paw.offsetWidth; // Trigger reflow
   paw.classList.add('hit');
-  setTimeout(() => paw.classList.remove('hit'), 150);
   
   // Animate drum
+  drum.classList.remove('hit');
+  void drum.offsetWidth; // Trigger reflow
   drum.classList.add('hit');
-  setTimeout(() => drum.classList.remove('hit'), 150);
   
-  // Head bops slightly
-  catHead.style.transform = `rotate(${isLeftDrum ? -5 : 5}deg)`;
-  setTimeout(() => catHead.style.transform = 'rotate(0deg)', 100);
+  // Cat expressions
+  catHead.classList.add('happy');
+  catHead.style.transform = `rotate(${isLeftDrum ? -8 : 8}deg) scale(1.05)`;
+  
+  setTimeout(() => {
+    catHead.classList.remove('happy');
+    catHead.style.transform = 'rotate(0deg) scale(1)';
+  }, 100);
   
   // Play sound
-  playDrum(isLeftDrum ? 220 : 280);
+  playDrum(isLeftDrum ? 200 : 250);
   
   // Create note
   createNote(x, y);
@@ -85,38 +92,38 @@ function hitDrum(isLeftDrum, x, y) {
 function createNote(x, y) {
   const note = document.createElement('div');
   note.className = 'note';
-  note.textContent = ['♪', '♫', '♬', '🎵', '🎶'][Math.floor(Math.random() * 5)];
-  note.style.left = (x + Math.random() * 40 - 20) + 'px';
-  note.style.top = (y + Math.random() * 30 - 15) + 'px';
+  note.textContent = ['♪', '♫', '♬', '🎵', '🎶', '🐱', '✨'][Math.floor(Math.random() * 7)];
+  note.style.left = (x + Math.random() * 60 - 30) + 'px';
+  note.style.top = (y - 20 + Math.random() * 40 - 20) + 'px';
   notesContainer.appendChild(note);
   
-  setTimeout(() => note.remove(), 1000);
+  setTimeout(() => note.remove(), 800);
 }
 
 // Setup button listeners
 function setupButtonListeners() {
   // Left button (A)
-  leftButton.addEventListener('click', (e) => {
+  leftButton.addEventListener('mousedown', (e) => {
     e.stopPropagation();
-    hitDrum(true, 140, 150);
+    hitDrum(true, 100, 200);
   });
   
   leftButton.addEventListener('touchstart', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    hitDrum(true, 140, 150);
+    hitDrum(true, 100, 200);
   });
   
   // Right button (D)
-  rightButton.addEventListener('click', (e) => {
+  rightButton.addEventListener('mousedown', (e) => {
     e.stopPropagation();
-    hitDrum(false, 260, 150);
+    hitDrum(false, 300, 200);
   });
   
   rightButton.addEventListener('touchstart', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    hitDrum(false, 260, 150);
+    hitDrum(false, 300, 200);
   });
 }
 
@@ -127,11 +134,11 @@ document.addEventListener('keydown', (e) => {
   const key = e.key.toLowerCase();
   if (key === 'a') {
     e.preventDefault();
-    hitDrum(true, 140, 150);
+    hitDrum(true, 100, 200);
     leftButton.classList.add('active');
   } else if (key === 'd') {
     e.preventDefault();
-    hitDrum(false, 260, 150);
+    hitDrum(false, 300, 200);
     rightButton.classList.add('active');
   }
 });
