@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Interactive Bongo Cat that plays drums when you click or tap">
   <title>Bongo Cat</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Space+Grotesk:wght@500;700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,13 +15,18 @@
   
   <h1 class="title" aria-label="Bongo Cat">🎵 Bongo Cat 🎵</h1>
   
+  <div class="combo-display" aria-live="polite">
+    <span class="combo-count">0</span>
+    <span class="combo-label">combo</span>
+  </div>
+  
   <div class="stage" role="application" aria-label="Bongo Cat drum game">
     <div class="cat">
       <div class="cat-head">
         <div class="ear left"><div class="ear-inner"></div></div>
         <div class="ear right"><div class="ear-inner"></div></div>
-        <div class="eye left"></div>
-        <div class="eye right"></div>
+        <div class="eye left"><div class="pupil"></div></div>
+        <div class="eye right"><div class="pupil"></div></div>
         <div class="whiskers left">
           <div class="whisker"></div>
           <div class="whisker"></div>
@@ -32,6 +39,8 @@
         </div>
         <div class="nose"></div>
         <div class="mouth"></div>
+        <div class="cheek left"></div>
+        <div class="cheek right"></div>
       </div>
       <div class="cat-body">
         <div class="cat-belly"></div>
@@ -41,25 +50,35 @@
       <div class="paw right"></div>
     </div>
     
-    <div class="drum left">
+    <div class="drum left" data-key="a">
       <div class="drum-top"></div>
       <div class="drum-base"></div>
+      <div class="drum-hint">A / ←</div>
     </div>
-    <div class="drum right">
+    <div class="drum right" data-key="d">
       <div class="drum-top"></div>
       <div class="drum-base"></div>
+      <div class="drum-hint">D / →</div>
     </div>
     
     <div class="notes"></div>
+    <div class="particles"></div>
   </div>
+  
+  <div class="space-hint">Space = both drums!</div>
   
   <!-- Mobile control buttons -->
   <div class="mobile-controls">
-    <button class="drum-button left-button" data-key="a">A</button>
-    <button class="drum-button right-button" data-key="d">D</button>
+    <button class="drum-button left-button" data-key="a" aria-label="Left drum (A or Left Arrow)">A</button>
+    <button class="drum-button space-button" data-key="space" aria-label="Both drums (Space)">␣</button>
+    <button class="drum-button right-button" data-key="d" aria-label="Right drum (D or Right Arrow)">D</button>
   </div>
   
-  <p class="instructions">Press A or D keys to play!</p>
+  <p class="instructions">Press A, D, ←, →, or Space to play!</p>
+  
+  <div class="streak-celebration" aria-hidden="true">
+    <div class="streak-text"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
