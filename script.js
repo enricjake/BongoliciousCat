@@ -282,10 +282,21 @@
   }
 
   // Button listeners
+  let lastInputTime = 0;
+  const INPUT_DEBOUNCE_MS = 50;
+
   function setupButtonListeners() {
+    function debounce() {
+      const now = Date.now();
+      if (now - lastInputTime < INPUT_DEBOUNCE_MS) return false;
+      lastInputTime = now;
+      return true;
+    }
+
     function handleLeft(e) {
       e.preventDefault();
       e.stopPropagation();
+      if (!debounce()) return;
       const pos = getDrumNotePos(true);
       hitDrum(true, pos.x, pos.y);
     }
@@ -293,6 +304,7 @@
     function handleRight(e) {
       e.preventDefault();
       e.stopPropagation();
+      if (!debounce()) return;
       const pos = getDrumNotePos(false);
       hitDrum(false, pos.x, pos.y);
     }
@@ -300,6 +312,7 @@
     function handleSpace(e) {
       e.preventDefault();
       e.stopPropagation();
+      if (!debounce()) return;
       hitBothDrums();
     }
 
@@ -318,6 +331,7 @@
   // Keyboard handler
   document.addEventListener('keydown', (e) => {
     if (e.repeat) return;
+    if (!debounce()) return;
 
     const key = e.key.toLowerCase();
 
