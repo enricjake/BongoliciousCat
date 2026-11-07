@@ -285,14 +285,15 @@
   let lastInputTime = 0;
   const INPUT_DEBOUNCE_MS = 50;
 
-  function setupButtonListeners() {
-    function debounce() {
-      const now = Date.now();
-      if (now - lastInputTime < INPUT_DEBOUNCE_MS) return false;
-      lastInputTime = now;
-      return true;
-    }
+  // Shared by pointer and keyboard input so one physical tap never double-fires
+  function debounce() {
+    const now = Date.now();
+    if (now - lastInputTime < INPUT_DEBOUNCE_MS) return false;
+    lastInputTime = now;
+    return true;
+  }
 
+  function setupButtonListeners() {
     function handleLeft(e) {
       e.preventDefault();
       e.stopPropagation();
