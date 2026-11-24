@@ -2,6 +2,8 @@
 
 An interactive Bongo Cat that plays drums when you press keys or tap buttons. Pure HTML, CSS, and JavaScript - no dependencies!
 
+![Bongo Cat gameplay](assets/gameplay.png)
+
 🎮 **[Play Now](https://enricjake.github.io/BongoliciousCat/)** | See the cat in action!
 
 ## How to Play
